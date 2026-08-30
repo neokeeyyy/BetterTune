@@ -88,7 +88,7 @@ import com.arturo254.opentune.constants.SwipeThumbnailKey
 import com.arturo254.opentune.constants.SwipeSensitivityKey
 import com.arturo254.opentune.constants.SwipeToSongKey
 import com.arturo254.opentune.constants.HidePlayerThumbnailKey
-import com.arturo254.opentune.constants.BetterTuneCanvasKey
+import com.arturo254.opentune.constants.OpenTuneCanvasKey
 import com.arturo254.opentune.constants.ThumbnailCornerRadiusKey
 import com.arturo254.opentune.constants.CropThumbnailToSquareKey
 import com.arturo254.opentune.constants.DisableBlurKey
