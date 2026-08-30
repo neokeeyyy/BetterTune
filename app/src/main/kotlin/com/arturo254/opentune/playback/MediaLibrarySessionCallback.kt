@@ -39,6 +39,8 @@ import com.arturo254.opentune.db.entities.PlaylistEntity
 import com.arturo254.opentune.db.entities.Song
 import com.arturo254.opentune.extensions.toMediaItem
 import com.arturo254.opentune.extensions.toggleRepeatMode
+import com.arturo254.opentune.innertube.YouTube
+import com.arturo254.opentune.innertube.models.SongItem
 import com.arturo254.opentune.utils.dataStore
 import com.arturo254.opentune.utils.get
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -154,13 +156,45 @@ constructor(
         }
     }
 
+    // Voice command: "Ok Google, play [query]" — search online and play first result
     override fun onSearch(
         session: MediaLibrarySession,
         browser: MediaSession.ControllerInfo,
         query: String,
         params: MediaLibraryService.LibraryParams?,
     ): ListenableFuture<LibraryResult<Void>> =
-        Futures.immediateFuture(LibraryResult.ofVoid(params))
+        scope.future(Dispatchers.IO) {
+            val q = query.trim()
+            if (q.isBlank()) {
+                return@future LibraryResult.ofVoid(params)
+            }
+
+            // Try online search first (YouTube Music via InnerTube)
+            val searchResult = YouTube.searchSummary(q).getOrNull()
+            val firstSong = searchResult?.summaries
+                ?.flatMap { it.items }
+                ?.filterIsInstance<SongItem>()
+                ?.firstOrNull()
+
+            if (firstSong != null) {
+                val mediaItems = listOf(firstSong.toMediaItem())
+                session.player.setMediaItems(mediaItems, 0, 0)
+                session.player.prepare()
+                session.player.playWhenReady = true
+                return@future LibraryResult.ofVoid(params)
+            }
+
+            // Fallback: local database search
+            val matchedSongs = database.searchSongs(q, previewSize = 5).first()
+            if (matchedSongs.isNotEmpty()) {
+                val mediaItems = matchedSongs.map { it.toMediaItem() }
+                session.player.setMediaItems(mediaItems, 0, 0)
+                session.player.prepare()
+                session.player.playWhenReady = true
+            }
+
+            LibraryResult.ofVoid(params)
+        }
 
     override fun onGetSearchResult(
         session: MediaLibrarySession,
@@ -732,17 +766,51 @@ constructor(
                 }
 
                 else -> {
-                    val query = firstItem.requestMetadata.searchQuery?.trim().orEmpty()
+                    val extras = firstItem.requestMetadata.extras
+                    val focus = extras?.getString("android.intent.extra.MEDIA_FOCUS")
+                    val title = extras?.getString("android.intent.extra.MEDIA_TITLE")
+                    val artist = extras?.getString("android.intent.extra.MEDIA_ARTIST")
+                    val album = extras?.getString("android.intent.extra.MEDIA_ALBUM")
+                    val query = buildString {
+                        if (!title.isNullOrBlank()) append(title)
+                        if (!artist.isNullOrBlank()) {
+                            if (isNotEmpty()) append(" ")
+                            append(artist)
+                        }
+                        if (isBlank()) {
+                            append(firstItem.requestMetadata.searchQuery?.trim().orEmpty())
+                        }
+                    }
                     if (query.isBlank()) return@future defaultResult
 
+                    // 1. Local database search
                     val matchedSongs = database.searchSongs(query, previewSize = 50).first()
-                    val songId = matchedSongs.firstOrNull()?.id ?: return@future defaultResult
-                    val allSongs = database.songsByCreateDateAsc().first()
-                    MediaSession.MediaItemsWithStartPosition(
-                        allSongs.map { it.toMediaItem() },
-                        allSongs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0,
-                        startPositionMs,
-                    )
+                    if (matchedSongs.isNotEmpty()) {
+                        val songId = matchedSongs.first().id
+                        val allSongs = database.songsByCreateDateAsc().first()
+                        return@future MediaSession.MediaItemsWithStartPosition(
+                            allSongs.map { it.toMediaItem() },
+                            allSongs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0,
+                            startPositionMs,
+                        )
+                    }
+
+                    // 2. Online fallback: YouTube Music search
+                    val searchResult = YouTube.searchSummary(query).getOrNull()
+                    val firstSong = searchResult?.summaries
+                        ?.flatMap { it.items }
+                        ?.filterIsInstance<SongItem>()
+                        ?.firstOrNull()
+                    if (firstSong != null) {
+                        val mediaItems = listOf(firstSong.toMediaItem())
+                        return@future MediaSession.MediaItemsWithStartPosition(
+                            mediaItems,
+                            0,
+                            startPositionMs,
+                        )
+                    }
+
+                    defaultResult
                 }
             }
         }
