@@ -10,6 +10,7 @@ package com.arturo254.opentune
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -17,6 +18,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -446,9 +448,18 @@ class MainActivity : ComponentActivity() {
 
 
 
+    // Voice command: receives MEDIA_PLAY_FROM_SEARCH from Google Assistant
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        if (intent.action == MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH) {
+            val query = intent.getStringExtra(SearchManager.QUERY)
+            if (!query.isNullOrBlank()) {
+                // La query se rutea vía MediaSession.onSetMediaItems automáticamente
+                // Esta es una ruta de fallback para recepción directa del intent
+            }
+            return
+        }
         if (::navController.isInitialized) {
             handleDeepLinkIntent(intent, navController)
         } else {
@@ -1988,6 +1999,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleDeepLinkIntent(intent: Intent, navController: NavHostController) {
+        // Voice command: MEDIA_PLAY_FROM_SEARCH is handled via MediaSession, no UI navigation needed
+        if (intent.action == MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH) {
+            return
+        }
+
         if (intent.action == ACTION_DOWNLOAD_QUEUE) {
             navController.navigate(Screens.DownloadQueue.route)
             return

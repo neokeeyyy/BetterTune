@@ -20,4 +20,19 @@
             android:targetClass="com.arturo254.opentune.MainActivity"
             android:targetPackage="com.arturo254.opentune" />
     </shortcut>
+    <!-- Voice command: "Ok Google, play [song] on OpenTune" -->
+    <shortcut
+        android:shortcutId="play_audio"
+        android:shortcutShortLabel="@string/play"
+        android:shortcutLongLabel="@string/play"
+        android:enabled="true"
+        android:icon="@drawable/opentune">
+        <capability-binding android:key="actions.intent.PLAY_AUDIO">
+            <extra android:name="QUERY" android:value="" />
+        </capability-binding>
+        <intent
+            android:action="android.media.action.MEDIA_PLAY_FROM_SEARCH"
+            android:targetClass="com.arturo254.opentune.MainActivity"
+            android:targetPackage="com.arturo254.opentune" />
+    </shortcut>
 </shortcuts>

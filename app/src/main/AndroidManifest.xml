@@ -154,6 +154,11 @@
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
+
+            <!-- App Actions: voice commands ("Ok Google, play [song] on OpenTune") -->
+            <meta-data
+                android:name="android.app.actions"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <provider
@@ -176,6 +181,10 @@
                 <action android:name="androidx.media3.session.MediaLibraryService" />
                 <action android:name="android.media.browse.MediaBrowserService" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Voice command: receives MEDIA_PLAY_FROM_SEARCH from Google Assistant -->
+            <intent-filter>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
             </intent-filter>
         </service>
 
