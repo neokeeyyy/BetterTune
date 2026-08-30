@@ -1,5 +1,5 @@
 /*
- * OpenTune Project Original (2026)
+ * BetterTune Project Original (2026)
  * Arturo254 (github.com/Arturo254)
  * Licensed Under GPL-3.0 | see git history for contributors
  */
@@ -88,7 +88,7 @@ import com.arturo254.opentune.constants.SwipeThumbnailKey
 import com.arturo254.opentune.constants.SwipeSensitivityKey
 import com.arturo254.opentune.constants.SwipeToSongKey
 import com.arturo254.opentune.constants.HidePlayerThumbnailKey
-import com.arturo254.opentune.constants.OpenTuneCanvasKey
+import com.arturo254.opentune.constants.BetterTuneCanvasKey
 import com.arturo254.opentune.constants.ThumbnailCornerRadiusKey
 import com.arturo254.opentune.constants.CropThumbnailToSquareKey
 import com.arturo254.opentune.constants.DisableBlurKey
@@ -522,7 +522,7 @@ fun AppearanceSettings(
                 when (source) {
                     CanvasSource.AUTO -> "Auto"
                     CanvasSource.APPLE_MUSIC -> "Apple Music"
-                    CanvasSource.CUSTOM -> "Custom by OpenTune"
+                    CanvasSource.CUSTOM -> "Custom by BetterTune"
                     CanvasSource.TIDAL -> "Tidal"
                 }
             },

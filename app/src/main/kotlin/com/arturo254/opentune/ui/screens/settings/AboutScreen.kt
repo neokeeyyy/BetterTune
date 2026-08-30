@@ -1,9 +1,9 @@
 /*
- * OpenTune Project Original (2026)
+ * BetterTune Project Original (2026)
  * Arturo254 (github.com/Arturo254)
  * Licensed Under GPL-3.0 | see git history for contributors
  *
- * Rediseñado con sistema de diseño OpenTune + Material 3 Expressive
+ * Rediseñado con sistema de diseño BetterTune + Material 3 Expressive
  */
 
 package com.arturo254.opentune.ui.screens.settings
@@ -220,7 +220,7 @@ fun AboutScreen(
                     links = listOf(
                         SocialLink(
                             R.drawable.github,
-                            "https://github.com/Arturo254/OpenTune",
+                            "https://github.com/Arturo254/BetterTune",
                             "GitHub"
                         ),
                         SocialLink(
@@ -233,7 +233,7 @@ fun AboutScreen(
                             "https://www.facebook.com/Arturo254",
                             "Facebook"
                         ),
-                        SocialLink(R.drawable.paypal, "https://www.paypal.me/OpenTune", "PayPal"),
+                        SocialLink(R.drawable.paypal, "https://www.paypal.me/BetterTune", "PayPal"),
                         SocialLink(
                             R.drawable.instagram,
                             "https://www.instagram.com/arturocg.dev/",
@@ -293,7 +293,7 @@ fun AboutScreen(
             item(key = "license") {
                 LicenseFooterExpressive(
                     onLicenseClick = {
-                        uriHandler.openUri("https://github.com/Arturo254/OpenTune/blob/master/LICENSE")
+                        uriHandler.openUri("https://github.com/Arturo254/BetterTune/blob/master/LICENSE")
                     }
                 )
             }

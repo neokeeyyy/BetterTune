@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.arturo254.opentune.MainActivity
-import com.arturo254.opentune.ui.theme.OpenTuneTheme
+import com.arturo254.opentune.ui.theme.BetterTuneTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -76,7 +76,7 @@ class DebugActivity : ComponentActivity() {
         val deviceInfo = buildDeviceInfo(this)
 
         setContent {
-            OpenTuneTheme {
+            BetterTuneTheme {
                 CrashReportScreen(
                     previewText = previewText,
                     timestampText = timestampText,

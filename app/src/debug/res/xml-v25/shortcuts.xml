@@ -20,7 +20,7 @@
             android:targetClass="com.arturo254.opentune.MainActivity"
             android:targetPackage="com.arturo254.opentune" />
     </shortcut>
-    <!-- Voice command: "Ok Google, play [song] on OpenTune" -->
+    <!-- Voice command: "Ok Google, play [song] on BetterTune" -->
     <shortcut
         android:shortcutId="play_audio"
         android:shortcutShortLabel="@string/play"

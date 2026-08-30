@@ -255,7 +255,7 @@ import com.arturo254.opentune.ui.screens.settings.DarkMode
 import com.arturo254.opentune.ui.screens.settings.DiscordPresenceManager
 import com.arturo254.opentune.ui.screens.settings.NavigationTab
 import com.arturo254.opentune.ui.screens.settings.ThemePalettes
-import com.arturo254.opentune.ui.theme.OpenTuneTheme
+import com.arturo254.opentune.ui.theme.BetterTuneTheme
 import com.arturo254.opentune.ui.theme.ColorSaver
 import com.arturo254.opentune.ui.theme.DefaultThemeColor
 import com.arturo254.opentune.ui.theme.ThemeSeedPalette
@@ -724,7 +724,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            OpenTuneTheme(
+            BetterTuneTheme(
                 darkTheme = useDarkTheme,
                 pureBlack = pureBlack,
                 motionScheme = MotionScheme.expressive(),
